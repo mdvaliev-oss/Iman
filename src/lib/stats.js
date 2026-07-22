@@ -39,6 +39,11 @@ export function totals(days) {
   return { sins, good, balance: good - sins, namazDays, dayCount };
 }
 
+/** Отмечался ли пункт хотя бы раз за всё время (в этой корзине). */
+export function everHad(days, name, bucket) {
+  return Object.values(days).some((e) => (e?.[bucket]?.[name] || 0) > 0);
+}
+
 /** День считается «отмеченным», если в нём есть хотя бы одна запись грехов/благих дел. */
 const isTracked = (e) =>
   !!e && (Object.keys(e.sins || {}).length > 0 || Object.keys(e.good || {}).length > 0);
