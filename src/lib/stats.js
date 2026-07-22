@@ -39,24 +39,36 @@ export function totals(days) {
   return { sins, good, balance: good - sins, namazDays, dayCount };
 }
 
-/** Текущая и рекордная серия дней для конкретной отметки. */
-export function getStreak(days, name, bucket, wantPresent) {
-  const window = [];
-  for (let i = 60; i >= 0; i--) window.push(fmt(addDays(TODAY, -i)));
+/** День считается «отмеченным», если в нём есть хотя бы одна запись грехов/благих дел. */
+const isTracked = (e) =>
+  !!e && (Object.keys(e.sins || {}).length > 0 || Object.keys(e.good || {}).length > 0);
 
+/** Текущая и рекордная серия дней для конкретной отметки.
+   Считаем только по реально отмеченным дням — пустые дни не идут в зачёт,
+   иначе на чистых данных «дней без греха» ошибочно равнялось бы всему окну. */
+export function getStreak(days, name, bucket, wantPresent) {
+  const tracked = [];
+  for (let i = 60; i >= 0; i--) {
+    const key = fmt(addDays(TODAY, -i));
+    if (isTracked(days[key])) tracked.push(key);
+  }
+
+  const isOk = (key) => {
+    const c = days[key]?.[bucket]?.[name] || 0;
+    return wantPresent ? c > 0 : c === 0;
+  };
+
+  // текущая серия — непрерывный «хвост» отмеченных дней до последнего
   let current = 0;
-  for (let i = window.length - 1; i >= 0; i--) {
-    const c = days[window[i]]?.[bucket]?.[name] || 0;
-    const ok = wantPresent ? c > 0 : c === 0;
-    if (ok) current++;
+  for (let i = tracked.length - 1; i >= 0; i--) {
+    if (isOk(tracked[i])) current++;
     else break;
   }
 
+  // рекорд — самый длинный отрезок среди отмеченных дней
   let best = 0, run = 0;
-  for (let i = 0; i < window.length; i++) {
-    const c = days[window[i]]?.[bucket]?.[name] || 0;
-    const ok = wantPresent ? c > 0 : c === 0;
-    if (ok) {
+  for (let i = 0; i < tracked.length; i++) {
+    if (isOk(tracked[i])) {
       run++;
       best = Math.max(best, run);
     } else run = 0;
