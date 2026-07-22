@@ -4,6 +4,7 @@ import { TRIGGERS } from "../data/catalog.js";
 import CounterRow from "../components/CounterRow.jsx";
 import Section from "../components/Section.jsx";
 import GroupBlock from "../components/GroupBlock.jsx";
+import DuaCard from "../components/DuaCard.jsx";
 
 export default function TodayTab({ T, date, setDate, entry, hijri, categories, updateCount, setTrigger, setNote }) {
   const sinsTotal = Object.values(entry.sins || {}).reduce((a, b) => a + b, 0);
@@ -24,6 +25,8 @@ export default function TodayTab({ T, date, setDate, entry, hijri, categories, u
           <ChevronRight size={20} />
         </button>
       </div>
+
+      <DuaCard T={T} date={date} />
 
       <p style={{ color: T.muted, borderColor: T.border }} className="text-xs italic mb-6 border-l-2 pl-3">
         Не нужно подробностей — только категория и, если хочется, короткая заметка. Это дневник для роста, а не архив ошибок.
