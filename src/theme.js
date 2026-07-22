@@ -47,6 +47,7 @@ const LIGHT = {
   accent: "#5f8c6b",
   accent2: "#b56b4a",
   good: "#5f8c6b",
+  bad: "#c0453a",
   activeRow: "#eef3ee",
 };
 
@@ -62,6 +63,7 @@ const DARK = {
   accent: "#7fb08c",
   accent2: "#d18a63",
   good: "#7fb08c",
+  bad: "#e0705c",
   activeRow: "#22302a",
 };
 
