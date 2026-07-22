@@ -43,7 +43,10 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("today");
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
   const [calYear, setCalYear] = useState(new Date().getFullYear());
-  const [unlocked, setUnlocked] = useState(false);
+  // Блокируем только если PIN уже был задан на момент запуска приложения.
+  // Если PIN включают/задают во время сессии — текущий сеанс не запирается,
+  // защита начинает действовать со следующего открытия.
+  const [unlocked, setUnlocked] = useState(() => !(settings.pinEnabled && settings.pin));
 
   // цикл напоминаний
   useEffect(() => {
