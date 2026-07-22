@@ -31,7 +31,7 @@ function defaultState(withSeed) {
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return defaultState(true); // первый запуск — с демо-данными
+    if (!raw) return defaultState(false); // первый запуск — чистый старт, без демо
     const parsed = JSON.parse(raw);
     // мягкая миграция: дозаполняем отсутствующие поля дефолтами
     const base = defaultState(false);
@@ -42,7 +42,7 @@ function load() {
       settings: { ...base.settings, ...(parsed.settings || {}) },
     };
   } catch {
-    return defaultState(true);
+    return defaultState(false);
   }
 }
 
